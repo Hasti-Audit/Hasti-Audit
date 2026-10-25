@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Tier 1 Report - Hasti AI Audit</title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; max-width: 900px; margin: 40px auto; padding: 20px; line-height: 1.5; color: #333; background-color: #f9f9f9; }
+        .container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #1a3d6b; }
+        h1, h2 { color: #1a3d6b; font-family: Arial, sans-serif; }
+        .fail { color: #b00020; font-weight: bold; }
+        .pass { color: #2e7d32; font-weight: bold; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 20px 0; }
+        .header-info { font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TIER 1 SCREENING REPORT - SAMPLE</h1>
+        <div class="header-info">
+            <strong>FILE:</strong> patient_data.py<br>
+            <strong>REPORT ID:</strong> SAMPLE-REAL-2025-001<br>
+            <strong>AUDITOR:</strong> Ahmad Sabawoon Rasoli (Germany)<br>
+            <strong>TOOL VERSION:</strong> audit_tier1_tool_v10
+        </div>
+
+        <hr>
+        <h2>1. FINDINGS</h2>
+        <p><span class="fail">NC-B1: FAIL</span> - pickle.load without safeguard<br>
+        <em>Risk: Model cannot be verified against its architecture.</em></p>
+
+        <p><span class="fail">NC-B3: FAIL</span> - Data leakage pattern 'fit_transform'<br>
+        <em>Risk: Scaler fitted on full dataset before train/test split. This inflates reported accuracy.</em></p>
+
+        <p><span class="fail">NC-B4: FAIL</span> - Potential SQL injection via f-string<br>
+        <em>Risk: User input concatenated into SQL string. Could allow unauthorized database access.</em></p>
+
+        <p><span class="fail">NC-B5: FAIL</span> - Hardcoded credential 'DB_PASSWORD'<br>
+        <em>Risk: Database password in source code.</em></p>
+        
+        <p><span class="fail">NC-B5: FAIL</span> - Hardcoded credential 'API_TOKEN'<br>
+        <em>Risk: API token in source code.</em></p>
+
+        <p><span class="pass">NC-B6: PASS</span> - No semantic layer definition found in this file.</p>
+
+        <hr>
+        <h2>2. SUMMARY</h2>
+        <p><strong>Total checks:</strong> 5 defects found out of 6 possible<br>
+        <strong>Overall:</strong> <span class="fail">FAIL</span> (non-compliant with pre-audit criteria)</p>
+
+        <hr>
+        <h2>3. RISK ASSESSMENT</h2>
+        <p>This file contains multiple defects relevant to EU AI Act Article 15 (accuracy, robustness, security).</p>
+
+        <hr>
+        <h2>4. RECOMMENDATION</h2>
+        <ol>
+            <li>Move scaler.fit() to training data only (fix NC-B3).</li>
+            <li>Use parameterized SQL queries (fix NC-B4).</li>
+            <li>Load credentials from environment variables (fix NC-B5).</li>
+            <li>Add manifest and checksum for model files (fix NC-B1).</li>
+        </ol>
+
+        <hr>
+        <h2>5. LIMITATIONS</h2>
+        <p>This is a SAMPLE report on a synthetic file. It demonstrates the tool's detection capability on real patterns. It is not a full audit.</p>
+
+        <hr>
+        <p><strong>Ahmad Sabawoon Rasoli</strong><br>
+        Independent AI Auditor<br>
+        Bad Homburg, Germany<br>
+        <a href="https://hasti-audit.github.io/Hasti-Audit/">https://hasti-audit.github.io/Hasti-Audit/</a></p>
+        
+        <p><a href="index.html">← Back to Home</a></p>
+    </div>
+</body>
+</html>
