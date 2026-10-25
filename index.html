@@ -1,30 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Hasti AI Audit - EU AI Act Readiness</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; line-height: 1.6; color: #333; }
-        h1 { color: #1a3d6b; border-bottom: 2px solid #1a3d6b; padding-bottom: 10px; }
-        h2 { color: #1a3d6b; margin-top: 30px; }
-        .tier { border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 5px; }
-        .tier h3 { margin-top: 0; color: #1a3d6b; }
-        .price { font-size: 24px; color: #b00020; font-weight: bold; }
-        .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px; font-size: 14px; }
-        .contact { background: #e8f0f8; padding: 20px; border-radius: 5px; margin-top: 30px; }
-        .impressum { font-size: 12px; color: #666; margin-top: 40px; border-top: 1px solid #ddd; padding-top: 20px; }
-        a { color: #1a3d6b; }
-    </style>
-</head>
-<body>
+<div class="tier">
+    <h3>Tier 1 - Static Code Screening</h3>
+    <p>Static analysis of Python ML code for critical risk patterns:</p>
+    <ul>
+        <li>NC-B1: model loaded without manifest, schema, or checksum</li>
+        <li>NC-B3: common data-leakage patterns (scaler fit before split, target leakage)</li>
+        <li>NC-B4, NC-B5, NC-B6: SQL injection, hardcoded credentials, and semantic layer risks</li>
+    </ul>
+    <p>Output: JSON report with PASS/FAIL per file and detailed reasons.</p>
+    <p class="price">800 EUR</p>
+</div>
 
-<h1>Hasti AI Audit</h1>
-<p><strong>EU AI Act Readiness Assessment for HealthTech and FinTech</strong></p>
-<p>Independent pre-audit technical reviews based in Bad Homburg, Germany.</p>
+<div class="tier">
+    <h3>Tier 1.5 - Arithmetic Reliability Assessment (Hasti)</h3>
+    <p>Evaluation of LLM accuracy on standard arithmetic templates (Persian and English).</p>
+    <ul>
+        <li>14 standard templates (addition, subtraction, multiplication, division, power, sqrt, percent, log, mean, ratio, equation, area, fraction, multi_step)</li>
+        <li>Safety guard: rejects multi-step questions instead of guessing</li>
+        <li>Documented results: 0 incorrect answers across 443 documented tests (100% precision on standard templates; safe rejection via NO_MATCH on out-of-scope queries).</li>
+    </ul>
+    <p>Output: Full report with per-category accuracy and test methodology.</p>
+    <p class="price">500 EUR</p>
+</div>
 
-<h2>Services</h2>
+<div class="tier">
+    <h3>Tier 2 - Manual Review and Evidence Sealing</h3>
+    <p>Manual review of findings, cryptographic sealing of evidence (SHA-256), and timestamped audit trail (RFC 3161).</p>
+    <p class="price">1,500 EUR</p>
+</div>
 
-<!-- بخش‌های خدمات در قدم بعدی اینجا اضافه می‌شوند -->
+<div class="tier">
+    <h3>Full Package</h3>
+    <p>All three tiers combined.</p>
+    <p class="price">2,500 EUR</p>
+</div>
 
-</body>
-</html>
+<div class="disclaimer">
+    <strong>Important:</strong> This is a pre-audit technical review, not a certification. Findings are technical indicators, not a legal determination of compliance with the EU AI Act. A full conformity assessment requires qualified legal and technical review. Not legal advice.
+</div>
+
+<div class="contact">
+    <h2>Contact</h2>
+    <p><strong>Email:</strong> <a href="mailto:Sabawoon.rasoli@gmail.com">Sabawoon.rasoli@gmail.com</a></p>
+    <p><strong>Phone:</strong> +49 176 32401860</p>
+    <p><strong>Location:</strong> Bad Homburg, Germany</p>
+</div>
+
+<div class="impressum">
+    <h2>Legal Notice</h2>
+    <p>Information according to § 5 DDG: <a href="impressum.html">Click here for Impressum</a></p>
+</div>
