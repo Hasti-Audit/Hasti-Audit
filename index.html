@@ -1,51 +1,599 @@
-<div class="tier">
-    <h3>Tier 1 - Static Code Screening</h3>
-    <p>Static analysis of Python ML code for critical risk patterns:</p>
-    <ul>
-        <li>NC-B1: model loaded without manifest, schema, or checksum</li>
-        <li>NC-B3: common data-leakage patterns (scaler fit before split, target leakage)</li>
-        <li>NC-B4, NC-B5, NC-B6: SQL injection, hardcoded credentials, and semantic layer risks</li>
-    </ul>
-    <p>Output: JSON report with PASS/FAIL per file and detailed reasons.</p>
-    <p class="price">800 EUR</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EU AI Act readiness assessment for HealthTech and FinTech. Pre-audit technical review by Hasti AI Audit." />
+  <title>Hasti AI Audit — EU AI Act Readiness</title>
+  <style>
+    :root {
+      --bg: #f7f6f3;
+      --surface: #ffffff;
+      --ink: #1a1a1a;
+      --muted: #5c5c5c;
+      --line: #e4e2dc;
+      --accent: #0b3d2e;
+      --accent-hover: #0f5240;
+      --accent-soft: #e8f0ec;
+      --gold: #b8956c;
+      --shadow: 0 12px 40px rgba(26, 26, 26, 0.08);
+      --radius: 12px;
+      --nav-h: 72px;
+      --font: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
 
-<div class="tier">
-    <h3>Tier 1.5 - Arithmetic Reliability Assessment (Hasti)</h3>
-    <p>Evaluation of LLM accuracy on standard arithmetic templates (Persian and English).</p>
-    <ul>
-        <li>14 standard templates (addition, subtraction, multiplication, division, power, sqrt, percent, log, mean, ratio, equation, area, fraction, multi_step)</li>
-        <li>Safety guard: rejects multi-step questions instead of guessing</li>
-        <li>Documented results: 0 incorrect answers across 443 documented tests (100% precision on standard templates; safe rejection via NO_MATCH on out-of-scope queries).</li>
-    </ul>
-    <p>Output: Full report with per-category accuracy and test methodology.</p>
-    <p class="price">500 EUR</p>
-</div>
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1110;
+        --surface: #1a1d1b;
+        --ink: #f2f1ee;
+        --muted: #a8a8a0;
+        --line: #2a2e2b;
+        --accent: #7dbea4;
+        --accent-hover: #9ad4bc;
+        --accent-soft: #1e2a25;
+        --gold: #d4b48a;
+        --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      }
+    }
 
-<div class="tier">
-    <h3>Tier 2 - Manual Review and Evidence Sealing</h3>
-    <p>Manual review of findings, cryptographic sealing of evidence (SHA-256), and timestamped audit trail (RFC 3161).</p>
-    <p class="price">1,500 EUR</p>
-</div>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
 
-<div class="tier">
-    <h3>Full Package</h3>
-    <p>All three tiers combined.</p>
-    <p class="price">2,500 EUR</p>
-</div>
+    .container {
+      width: min(1120px, 92%);
+      margin: 0 auto;
+    }
 
-<div class="disclaimer">
-    <strong>Important:</strong> This is a pre-audit technical review, not a certification. Findings are technical indicators, not a legal determination of compliance with the EU AI Act. A full conformity assessment requires qualified legal and technical review. Not legal advice.
-</div>
+    /* —— Nav —— */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-size: 1.05rem;
+    }
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+    @media (prefers-color-scheme: dark) {
+      .logo-mark { color: #0f1110; }
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      list-style: none;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.2s ease;
+    }
+    @media (prefers-color-scheme: dark) {
+      .nav-cta { color: #0f1110 !important; }
+    }
+    .nav-cta:hover { background: var(--accent-hover); }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0.45rem 0.65rem;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
 
-<div class="contact">
-    <h2>Contact</h2>
-    <p><strong>Email:</strong> <a href="mailto:Sabawoon.rasoli@gmail.com">Sabawoon.rasoli@gmail.com</a></p>
-    <p><strong>Phone:</strong> +49 176 32401860</p>
-    <p><strong>Location:</strong> Bad Homburg, Germany</p>
-</div>
+    /* —— Hero —— */
+    .hero {
+      padding: 5.5rem 0 4.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+    .hero-eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      background: var(--gold);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 4.5vw, 3.15rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+      max-width: 16ch;
+      margin-bottom: 1.25rem;
+    }
+    .hero-lead {
+      font-size: 1.125rem;
+      color: var(--muted);
+      max-width: 52ch;
+      margin-bottom: 2rem;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-bottom: 2.75rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.85rem 1.4rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    @media (prefers-color-scheme: dark) {
+      .btn-primary { color: #0f1110; }
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--line);
+      color: var(--ink);
+    }
+    .btn-secondary:hover {
+      border-color: var(--muted);
+      background: var(--surface);
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      max-width: 640px;
+    }
+    .meta-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      box-shadow: var(--shadow);
+    }
+    .meta-card strong {
+      display: block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+    .meta-card span {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
 
-<div class="impressum">
-    <h2>Legal Notice</h2>
-    <p>Information according to § 5 DDG: <a href="impressum.html">Click here for Impressum</a></p>
-</div>
+    /* —— Sections —— */
+    section { padding: 4.5rem 0; }
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.15rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+    .section-intro {
+      color: var(--muted);
+      max-width: 60ch;
+      margin-bottom: 2.5rem;
+    }
+
+    /* —— Pricing grid —— */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+    .tier {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .tier.featured {
+      border-color: var(--accent);
+      box-shadow: 0 16px 48px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+    .tier-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 0.3rem 0.55rem;
+      border-radius: 999px;
+    }
+    .tier h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+    }
+    .tier-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+    .price {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.25rem;
+    }
+    .price small {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .tier ul {
+      list-style: none;
+      margin: 1.25rem 0 1.75rem;
+      flex: 1;
+    }
+    .tier li {
+      position: relative;
+      padding-left: 1.35rem;
+      margin-bottom: 0.7rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+    .tier li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.45rem;
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.85;
+    }
+    .tier .btn {
+      width: 100%;
+    }
+
+    .full-package {
+      margin-top: 1.5rem;
+      background: linear-gradient(135deg, var(--accent-soft), var(--surface));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .full-package h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.2rem;
+    }
+    .full-package p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .full-package .price {
+      font-size: 1.6rem;
+      margin: 0;
+    }
+
+    /* —— Disclaimer / Contact —— */
+    .notice {
+      background: var(--surface);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.25rem 1.4rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+    .contact-card strong {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .contact-card a { color: var(--accent); font-weight: 600; }
+    .contact-card a:hover { text-decoration: underline; }
+
+    /* —— Footer —— */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 2rem 0 2.5rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.25rem;
+    }
+    .footer-links a:hover { color: var(--ink); }
+
+    /* —— Responsive —— */
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .hero-meta { grid-template-columns: 1fr; max-width: 100%; }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: var(--nav-h);
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 4%;
+        gap: 0.85rem;
+      }
+      .nav-links.open { display: flex; }
+      .menu-toggle { display: inline-block; }
+      .hero { padding: 3.5rem 0 3rem; }
+      .nav-cta { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-mark">HA</span>
+        <span>Hasti AI Audit</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-label="Open menu" onclick="document.getElementById('navLinks').classList.toggle('open')">Menu</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="impressum.html">Impressum</a></li>
+        <li><a class="nav-cta" href="sample_report.html">View Sample Report</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <p class="hero-eyebrow">Independent technical pre-audit</p>
+        <h1>EU AI Act Readiness Assessment for HealthTech and FinTech.</h1>
+        <p class="hero-lead">
+          Structured technical review of model code, arithmetic reliability, and evidence integrity —
+          designed for teams preparing for EU AI Act obligations. Not a certification. Not legal advice.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="sample_report.html">View Sample Report</a>
+          <a class="btn btn-secondary" href="#pricing">Explore engagement tiers</a>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-card">
+            <strong>Focus</strong>
+            <span>HealthTech &amp; FinTech AI systems</span>
+          </div>
+          <div class="meta-card">
+            <strong>Method</strong>
+            <span>Code screening · reliability tests · evidence seal</span>
+          </div>
+          <div class="meta-card">
+            <strong>Based in</strong>
+            <span>Bad Homburg, Germany</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <p class="section-label">Approach</p>
+        <h2 class="section-title">Three technical layers. One clear report trail.</h2>
+        <p class="section-intro">
+          Engagements can be scoped by tier or combined as a full package. Each layer produces
+          machine-readable or sealed evidence suitable for internal readiness discussions.
+        </p>
+      </div>
+    </section>
+
+    <section id="pricing" style="padding-top: 0;">
+      <div class="container">
+        <p class="section-label">Pricing</p>
+        <h2 class="section-title">Engagement tiers</h2>
+        <p class="section-intro">Transparent fixed fees. Scope confirmed before work begins.</p>
+
+        <div class="pricing-grid">
+          <article class="tier">
+            <h3>Tier 1 — Static Code Screening</h3>
+            <p class="tier-sub">Python ML risk-pattern analysis</p>
+            <p class="price">800 <small>EUR</small></p>
+            <ul>
+              <li>NC-B1: model loaded without manifest, schema, or checksum</li>
+              <li>NC-B3: data-leakage patterns (scaler fit before split, target leakage)</li>
+              <li>NC-B4 / B5 / B6: SQL injection, hardcoded credentials, semantic-layer risks</li>
+              <li>JSON report with PASS/FAIL per file and detailed reasons</li>
+            </ul>
+            <a class="btn btn-secondary" href="mailto:Sabawoon.rasoli@gmail.com?subject=Tier%201%20enquiry">Request Tier 1</a>
+          </article>
+
+          <article class="tier featured">
+            <span class="tier-badge">Core module</span>
+            <h3>Tier 1.5 — Arithmetic Reliability (Hasti)</h3>
+            <p class="tier-sub">LLM accuracy on standard arithmetic templates</p>
+            <p class="price">500 <small>EUR</small></p>
+            <ul>
+              <li>14 templates (add, sub, mul, div, power, sqrt, percent, log, mean, ratio, equation, area, fraction, multi-step)</li>
+              <li>Persian and English coverage</li>
+              <li>Safety guard: rejects multi-step / out-of-scope via NO_MATCH instead of guessing</li>
+              <li>Documented: 0 incorrect answers across 443 tests on standard templates</li>
+              <li>Full report with per-category accuracy and methodology</li>
+            </ul>
+            <a class="btn btn-primary" href="mailto:Sabawoon.rasoli@gmail.com?subject=Tier%201.5%20enquiry">Request Tier 1.5</a>
+          </article>
+
+          <article class="tier">
+            <h3>Tier 2 — Manual Review &amp; Evidence Sealing</h3>
+            <p class="tier-sub">Human review and cryptographic trail</p>
+            <p class="price">1,500 <small>EUR</small></p>
+            <ul>
+              <li>Manual review of findings</li>
+              <li>Cryptographic sealing of evidence (SHA-256)</li>
+              <li>Timestamped audit trail (RFC 3161)</li>
+              <li>Suitable for internal governance packs</li>
+            </ul>
+            <a class="btn btn-secondary" href="mailto:Sabawoon.rasoli@gmail.com?subject=Tier%202%20enquiry">Request Tier 2</a>
+          </article>
+        </div>
+
+        <div class="full-package">
+          <div>
+            <h3>Full Package</h3>
+            <p>All three tiers combined — code screening, arithmetic reliability, and sealed evidence review.</p>
+          </div>
+          <div style="text-align: right;">
+            <p class="price">2,500 <small>EUR</small></p>
+            <a class="btn btn-primary" href="mailto:Sabawoon.rasoli@gmail.com?subject=Full%20Package%20enquiry" style="margin-top: 0.5rem;">Request full package</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="notice">
+          <strong style="color: var(--ink);">Important:</strong>
+          This is a pre-audit technical review, not a certification. Findings are technical indicators,
+          not a legal determination of compliance with the EU AI Act. A full conformity assessment requires
+          qualified legal and technical review. Not legal advice.
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <p class="section-label">Contact</p>
+        <h2 class="section-title">Start a scoped engagement</h2>
+        <p class="section-intro">Share a short description of your system and preferred tier. Response within two business days.</p>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <strong>Email</strong>
+            <a href="mailto:Sabawoon.rasoli@gmail.com">Sabawoon.rasoli@gmail.com</a>
+          </div>
+          <div class="contact-card">
+            <strong>Phone</strong>
+            <span>+49 176 32401860</span>
+          </div>
+          <div class="contact-card">
+            <strong>Location</strong>
+            <span>Bad Homburg, Germany</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© 2026 Hasti AI Audit · Independent AI Auditor</span>
+      <div class="footer-links">
+        <a href="sample_report.html">Sample Report</a>
+        <a href="impressum.html">Impressum</a>
+        <a href="mailto:Sabawoon.rasoli@gmail.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
