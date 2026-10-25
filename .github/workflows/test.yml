@@ -1,0 +1,27 @@
+name: Test v11 Audit Tool
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  test-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Download real-world test file
+      run: |
+        curl -o patient_data.py https://raw.githubusercontent.com/Hasti-Audit/test-healthtech-app/main/patient_data.py
+
+    - name: Run v11 Audit Tool
+      run: |
+        python audit_tier1_tool_v11.py patient_data.py
