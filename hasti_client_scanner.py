@@ -1,23 +1,18 @@
 # ============================================================
-# Hasti AI Audit - Client-Side Scanner
-# Version: 1.0
+# Hasti AI Audit - Client-Side Scanner v2.0
+# Version: 2.0 (Enterprise Grade)
 # ============================================================
-# Instructions for the client:
-# 1. Place this file in the root folder of your Python project.
-# 2. Open a terminal in that folder.
-# 3. Run:  python hasti_client_scanner.py > audit_report.md
-# 4. Send only the generated file "audit_report.md" back to us.
-#    Do NOT send your source code.
-# ============================================================
-
 import os
 import ast
 import re
-from datetime import datetime, timezone
+import hashlib
+import sys
 
 class ClientScanner:
     def __init__(self):
         self.findings = []
+        self.files_scanned = 0
+        self.files_skipped = 0
 
     def scan_dir(self, directory="."):
         for root, dirs, files in os.walk(directory):
@@ -35,103 +30,65 @@ class ClientScanner:
             try:
                 tree = ast.parse(content)
             except SyntaxError:
+                self.files_skipped += 1
                 return
 
+            self.files_scanned += 1
+
+            # 1. Check for unsafe deserialization (pickle, joblib, torch)
             for node in ast.walk(tree):
-                if not isinstance(node, ast.Call):
-                    continue
+                if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+                    if isinstance(node.func.value, ast.Name):
+                        mod = node.func.value.id
+                        fn = node.func.attr
+                        if mod in ("pickle", "joblib") and fn in ("load", "loads"):
+                            self.findings.append(f"[CRITICAL] NC-B1 | {filepath}:{node.lineno} | Unsafe use of {mod}.{fn}()")
+                        if mod == "torch" and fn == "load":
+                            has_weights_only = any(kw.arg == "weights_only" and getattr(kw.value, 'value', None) is True for kw in node.keywords)
+                            sev = "LOW" if has_weights_only else "HIGH"
+                            self.findings.append(f"[{sev}] NC-B1 | {filepath}:{node.lineno} | torch.load() usage")
 
-                if isinstance(node.func, ast.Attribute):
-                    if (isinstance(node.func.value, ast.Name) and 
-                        node.func.value.id == "pickle" and 
-                        node.func.attr in ("load", "loads")):
-                        self.findings.append({
-                            "id": "NC-B1",
-                            "severity": "CRITICAL",
-                            "file": filepath,
-                            "line": node.lineno,
-                            "message": "Unsafe use of pickle.load/loads detected."
-                        })
+                # 2. Check for SQL Injection (string formatting in execute)
+                if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "execute":
+                    if node.args:
+                        arg = node.args[0]
+                        if isinstance(arg, (ast.JoinedStr, ast.BinOp)):
+                            self.findings.append(f"[HIGH] NC-B4 | {filepath}:{node.lineno} | Potential SQL Injection in execute()")
 
-                    if (isinstance(node.func.value, ast.Name) and 
-                        node.func.value.id == "os" and 
-                        node.func.attr in ("system", "popen")):
-                        self.findings.append({
-                            "id": "NC-DANGEROUS",
-                            "severity": "CRITICAL",
-                            "file": filepath,
-                            "line": node.lineno,
-                            "message": f"Use of os.{node.func.attr}() detected."
-                        })
+                # 3. Check for Dangerous Calls (eval, exec, os.system)
+                if isinstance(node, ast.Call):
+                    if isinstance(node.func, ast.Name) and node.func.id in ("eval", "exec"):
+                        self.findings.append(f"[CRITICAL] NC-DANGEROUS | {filepath}:{node.lineno} | Use of {node.func.id}()")
+                    if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name) and node.func.value.id == "os" and node.func.attr in ("system", "popen"):
+                        self.findings.append(f"[CRITICAL] NC-DANGEROUS | {filepath}:{node.lineno} | Use of os.{node.func.attr}()")
 
-                    if (isinstance(node.func.value, ast.Name) and 
-                        node.func.value.id == "subprocess" and 
-                        node.func.attr in ("call", "run", "Popen", "check_output")):
-                        for kw in node.keywords:
-                            if (kw.arg == "shell" and 
-                                isinstance(kw.value, ast.Constant) and 
-                                kw.value.value is True):
-                                self.findings.append({
-                                    "id": "NC-DANGEROUS",
-                                    "severity": "HIGH",
-                                    "file": filepath,
-                                    "line": node.lineno,
-                                    "message": "subprocess call with shell=True detected."
-                                })
-
-                    if (isinstance(node.func.value, ast.Name) and 
-                        node.func.value.id in ("yaml", "yml") and 
-                        node.func.attr == "load"):
-                        has_loader = any(kw.arg == "Loader" for kw in node.keywords)
-                        if not has_loader:
-                            self.findings.append({
-                                "id": "NC-YAML",
-                                "severity": "CRITICAL",
-                                "file": filepath,
-                                "line": node.lineno,
-                                "message": "Unsafe yaml.load() detected (no Loader specified)."
-                            })
-
-                if isinstance(node.func, ast.Name) and node.func.id in ("eval", "exec"):
-                    self.findings.append({
-                        "id": "NC-DANGEROUS",
-                        "severity": "CRITICAL",
-                        "file": filepath,
-                        "line": node.lineno,
-                        "message": f"Use of {node.func.id}() detected."
-                    })
+                # 4. Check for unsafe yaml.load
+                if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "load" and isinstance(node.func.value, ast.Name) and node.func.value.id == "yaml":
+                    if not any(kw.arg == "Loader" for kw in node.keywords):
+                        self.findings.append(f"[CRITICAL] NC-YAML | {filepath}:{node.lineno} | Unsafe yaml.load()")
 
         except Exception:
-            pass
+            self.files_skipped += 1
 
 def main():
     print("# Hasti AI Audit - Client Report")
-    print()
-    print(f"**Scan date:** {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
-    print("**Scanner:** Hasti Client-Side Scanner v1.0")
-    print("**Scope:** Static pattern matching only")
-    print()
-    print("## Findings")
-    print()
-
+    print("**Scanner:** Client-Side Scanner v2.0")
+    print("**Scope:** Static pattern matching only\n")
+    
     scanner = ClientScanner()
     scanner.scan_dir(".")
-
+    
+    print(f"**Files Scanned:** {scanner.files_scanned}")
+    print(f"**Files Skipped (Syntax/Read Error):** {scanner.files_skipped}\n")
+    
+    print("## Findings")
     if not scanner.findings:
         print("No issues matching the current rule set were found.")
     else:
-        severity_order = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2}
-        scanner.findings.sort(key=lambda x: severity_order.get(x["severity"], 99))
-
-        for i, f in enumerate(scanner.findings, 1):
-            print(f"{i}. **[{f['severity']}] {f['id']}**")
-            print(f"   - File: `{f['file']}`")
-            print(f"   - Line: {f['line']}")
-            print(f"   - Message: {f['message']}")
-            print()
-
-    print("---")
-    print("*This is an automated static scan. Manual review is recommended.*")
+        for f in scanner.findings:
+            print(f"- {f}")
+            
+    print("\n---\n*This is an automated static scan. Manual review is required.*")
 
 if __name__ == "__main__":
     main()
