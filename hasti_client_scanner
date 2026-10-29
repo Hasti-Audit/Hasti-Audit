@@ -1,12 +1,1 @@
-Hello Claude. I have successfully compiled my Python scanner script into a standalone executable file using PyInstaller in Google Colab. 
 
-The file is named `hasti_client_scanner` (Linux binary). My goal is to send this executable to a prospective enterprise client (a FinTech CEO) so their CTO can run it locally on their secure servers. 
-
-I have two problems:
-1. **Distribution:** The file size might be around 10-15 MB. I want to host it somewhere so the client can easily download it, but I don't want to expose my source code. I have a GitHub repository (Hasti-Audit/Hasti-Audit) and a Google Drive.
-2. **Trust & Verification:** How can I prove to the client's security team that this binary is safe, hasn't been tampered with, and doesn't contain malware?
-
-Please give me a step-by-step, practical guide on:
-1. The best and safest way to host and share this executable file (GitHub Release vs Google Drive vs other).
-2. How to generate a SHA-256 checksum for the executable and how to explain its purpose to the client.
-3. The exact wording I should use in my email to the client to explain how to download, verify, and run the file.
