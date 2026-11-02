@@ -8,7 +8,7 @@ Independent AI Auditor based in Germany. Specializing in EU AI Act readiness and
 * [PyTorch/YOLO Checkpoint Review](HASTI_REFERENCE_RUN_01_CHECKPOINT_REVIEW.md)
 * [Pricing & Engagement Tiers](pricing.html)
 
-## 🛡️ Client Scanner (Zero Data Risk)
+## 🛡️ Client Scanner (Privacy-First Local Scan)
 * [Download Hasti Client Scanner v12r](hasti_client_scanner_v12r.py)
 
 *(Note: The client scanner is a limited "Lite" version for initial pre-checks. The full 3-tier v12 analysis is performed exclusively by our team under NDA. Delivered in hours, not weeks.)*
