@@ -1,8 +1,4 @@
-# ============================================================
-# Create Hasti Client Scanner v12r (Final Clean Version)
-# ============================================================
-
-scanner_code = r'''# Hasti Client Scanner v12r
+# Hasti Client Scanner v12r
 # Run: python hasti_client_scanner.py > report.md
 # Send only report.md back.
 
@@ -112,9 +108,3 @@ if __name__=='__main__':
                     pass
     print('No issues found.' if not rows else '\n'.join(rows))
     print('\n---\n*Technical indicators only. Human review required.*')
-'''
-
-with open('/content/hasti_client_scanner_v12r.py', 'w', encoding='utf-8') as f:
-    f.write(scanner_code)
-
-print("✅ فایل v12r ساخته شد. اکنون آن را از پنل فایل‌ها (📁) در پوشه /content دانلود کرده و در گیت‌هاب آپلود کنید.")
