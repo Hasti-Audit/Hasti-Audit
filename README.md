@@ -1,5 +1,4 @@
-
-# Hasti AI Audit — Next-Generation Static Code Review
+# Hasti AI Audit — Next-Generation Static Code Review (v12)
 
 Independent AI Auditor based in Germany. Specializing in EU AI Act readiness and supply chain security for FinTech, HealthTech, and Automotive industries.
 
@@ -12,7 +11,7 @@ Independent AI Auditor based in Germany. Specializing in EU AI Act readiness and
 ## 🛡️ Client Scanner (Zero Data Risk)
 * [Download Hasti Client Scanner v12r](hasti_client_scanner_v12r.py)
 
-*(Note: The client scanner is a limited "Lite" version for initial pre-checks. The full 3-tier analysis and human review are performed exclusively by our team under NDA.)*
+*(Note: The client scanner is a limited "Lite" version for initial pre-checks. The full 3-tier v12 analysis is performed exclusively by our team under NDA. Delivered in hours, not weeks.)*
 
 ## 📞 Contact
 * Website: https://hasti-audit.github.io
