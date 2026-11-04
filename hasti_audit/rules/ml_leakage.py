@@ -5,6 +5,8 @@ import re
 from .base import make_finding
 from ..context import key_of
 
+TARGET_ENCODING_MODE = "warn"
+
 SCALER_CLASSES = {"StandardScaler", "MinMaxScaler", "RobustScaler", "MaxAbsScaler", "Normalizer", "PowerTransformer",
                   "QuantileTransformer", "SimpleImputer", "KNNImputer", "IterativeImputer", "PCA", "TruncatedSVD",
                   "OneHotEncoder", "OrdinalEncoder", "LabelEncoder", "TfidfVectorizer", "CountVectorizer"}
@@ -29,12 +31,12 @@ class MlLeakageRule:
 
         for scope in context.iter_scopes():
             scope_nodes = [n for n in ast.walk(scope) if hasattr(n, "lineno")]
-            has_split = any(
-                isinstance(n, ast.Call) and
-                (isinstance(n.func, ast.Name) and n.func.id == "train_test_split" or
-                 isinstance(n.func, ast.Attribute) and n.func.attr == "train_test_split")
-                for n in scope_nodes
-            )
+            split_lines = [n.lineno for n in scope_nodes 
+                           if isinstance(n, ast.Call) and 
+                           (isinstance(n.func, ast.Name) and n.func.id == "train_test_split" or
+                            isinstance(n.func, ast.Attribute) and n.func.attr == "train_test_split")]
+            has_split = len(split_lines) > 0
+            first_split_line = min(split_lines) if split_lines else None
 
             for node in scope_nodes:
                 if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr in {"fit", "fit_transform"}:
@@ -44,7 +46,8 @@ class MlLeakageRule:
                     
                     if scaler_like and node.args and isinstance(node.args[0], ast.Name) and node.args[0].id.lower() in FULL_DATA_NAMES:
                         if has_split:
-                            findings.append(make_finding("NC-B3", "MEDIUM", "scaler/transformer fit on the full dataset; fit on the training split only", filename, node.lineno))
+                            msg = f"scaler/transformer fit on the full dataset before train_test_split (line {first_split_line}); fit on the training split only"
+                            findings.append(make_finding("NC-B3", "MEDIUM", msg, filename, node.lineno))
 
         if not any(w in os.path.basename(filename).lower() for w in EVAL_WORDS):
             for scope in context.iter_scopes():
