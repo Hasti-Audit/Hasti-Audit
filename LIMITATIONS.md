@@ -10,7 +10,6 @@ Hasti performs a **scoped static pre-check** on Python source code. It looks for
 ## What Hasti does not do
 - Does not scan Jupyter Notebooks (.ipynb) or non-Python files
 - May skip directories named `tests/` or `examples/` by default (configurable in CLI)
-- May skip directories named `tests/` or `examples/` by default (configurable in CLI)
 - Does not prove that code is safe or secure
 - Does not replace a full security audit, penetration test, or code review by a qualified team
 - Does not provide legal advice or EU AI Act / MDR / ISO certification
