@@ -8,7 +8,7 @@
 Hasti performs a **scoped static pre-check** on Python source code. It looks for selected high-risk patterns commonly relevant to AI/data systems (unsafe deserialization, dangerous dynamic execution, unsafe YAML loading, basic dynamic SQL construction, simple leakage indicators, and simple secret-looking assignments).
 
 ## What Hasti does not do
-
+- Does not scan Jupyter Notebooks (.ipynb) or non-Python files
 - Does not prove that code is safe or secure
 - Does not replace a full security audit, penetration test, or code review by a qualified team
 - Does not provide legal advice or EU AI Act / MDR / ISO certification
