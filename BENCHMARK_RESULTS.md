@@ -11,11 +11,13 @@
 | Metric | Value |
 | :--- | :--- |
 | Repositories Scanned | 10 |
-| Total Python Files | 2,934 |
-| Total Findings | 219 (plus 1 file that failed to parse) |
+| Python files scanned | 2,934 |
+| Total findings | 220 (includes 1 parse error) |
 | Total Time | 121.8 seconds |
 | Average Speed | 41.5 ms/file |
 | Read Errors | 0 |
+
+**Note:** `tests/` and `examples/` directories were skipped by default. The file counts below are therefore lower than the full repository size. The number of findings has not been manually reviewed.
 
 ## Repositories Tested
 
@@ -25,7 +27,7 @@
 4. **openai/openai-cookbook** – 1 file, 0 findings (mostly .ipynb notebooks, not scanned)
 5. **microsoft/ML-For-Beginners** – 14 files, 1 finding
 6. **scikit-learn/scikit-learn** – 374 files, 48 findings
-7. **streamlit/streamlit** – 821 files, 14 findings
+7. **streamlit/streamlit** – 821 files, 14 findings (includes 1 parse error)
 8. **tiangolo/fastapi** – 454 files, 15 findings
 9. **huggingface/diffusers** – 1,108 files, 98 findings
 10. **psf/requests** – 18 files, 0 findings
@@ -41,7 +43,8 @@
 | NC-SECRET | 17 | Hardcoded secrets (AWS, Stripe, etc.) |
 | NC-SHELL | 15 | `subprocess` with `shell=True` |
 | NC-YAML | 4 | Unsafe `yaml.load()` |
-| NC-PARSE | 1 | Syntax error (file not scanned) |
+
+**Parse errors (not findings):** 1 (in streamlit)
 
 ## What This Demonstrates
 
