@@ -1,8 +1,10 @@
 # Hasti v12 – Real-World Benchmark Results
 
-**Date:** 2025-11-06
+**Date:** 2026-11-06
 **Engine:** Hasti Audit v12 (Modular)
 **Environment:** Google Colab (Linux, Python 3.13)
+
+---
 
 ## Summary
 
@@ -10,7 +12,7 @@
 | :--- | :--- |
 | Repositories Scanned | 10 |
 | Total Python Files | 2,934 |
-| Total Findings | 220 |
+| Total Findings | 219 (plus 1 file that failed to parse) |
 | Total Time | 121.8 seconds |
 | Average Speed | 41.5 ms/file |
 | Read Errors | 0 |
@@ -32,7 +34,7 @@
 
 | Rule | Count | Description |
 | :--- | :--- | :--- |
-| NC-TORCH | 116 | `torch.load` without `weights_only=True` |
+| NC-TORCH | 116 | `torch.load` without `weights_only=True` (relevant for PyTorch < 2.6) |
 | NC-B3 | 25 | Scaler fit on full dataset (leakage) |
 | NC-B1 | 24 | Unsafe `pickle` / `joblib` deserialization |
 | NC-DYN | 18 | `eval()` / `exec()` usage |
@@ -43,12 +45,12 @@
 
 ## What This Demonstrates
 
-1. **Enterprise-Scale Capability:** Hasti v12 can scan thousands of files in seconds.
+1. **Scans a few thousand files in about two minutes:** Hasti v12 scans 2,934 files in 121.8 seconds.
 2. **Zero Read Errors:** The engine is stable even on complex, real-world codebases.
 3. **Broad Coverage:** Detects multiple vulnerability patterns across diverse projects.
 
 ## Important Note
 
-These findings are **technical indicators** from a static pre-check. They are **not** confirmed vulnerabilities. Manual review is required to verify exploitability. A "finding" means the pattern was detected; it does not guarantee a false positive or a true positive.
+These findings are **technical indicators** from a static pre-check. They are **not** confirmed vulnerabilities. Manual review is required to verify exploitability. A finding indicates a detected pattern, not a confirmed vulnerability.
 
 **Limitations:** https://github.com/Hasti-Audit/Hasti-Audit/blob/main/LIMITATIONS.md
