@@ -30,6 +30,8 @@ class MlLeakageRule:
                     scaler_names.update(k for k in (key_of(t) for t in n.targets) if k)
 
         for scope in context.iter_scopes():
+            if scope is context.tree:
+                 continue
             scope_nodes = [n for n in ast.walk(scope) if hasattr(n, "lineno")]
             split_lines = [n.lineno for n in scope_nodes 
                            if isinstance(n, ast.Call) and 
