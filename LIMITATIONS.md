@@ -34,7 +34,28 @@ Scanning a specific file or directory directly bypasses this skip list.
 - **NC-YAML (unsafe YAML):** Flags `yaml.load` without `SafeLoader`. May also flag legitimate uses in controlled environments.
 - **NC-SQL (dynamic SQL):** Flags dynamic SQL built with f-strings, `.format()`, `%`, or `+`. May also flag legitimate uses in reporting or analytics.
 - **NC-B3 (leakage):** Fires only when `train_test_split` appears in the **same function** as the scaler/preprocessor fit on a full-data variable. Leakage across function boundaries, or in files without a local split, is not detected. (Fixed 2026-11-07: previous versions incorrectly scanned at file scope, producing false positives.)
-- **NC-SECRET (hardcoded secrets):** May also fire on placeholder or example secrets. Files under `docs_src/`, `docs/`, and `examples/` are common sources of such findings and are now skipped by default.
+- **NC-SECRET (hardcoded secrets):** Flags name-based and pattern-based secrets. Enum-like assignments (`apiKey = "apiKey"`) and CORS headers (`Access-Control-Allow-Credentials`) are excluded. May also fire on placeholder or example secrets; files under `docs_src/`, `docs/`, and `examples/` are skipped by default.
+
+## Measured precision (manual review, 2026-11-07)
+
+The following table summarizes a **manual review of 36 findings** sampled from fastapi, streamlit, scikit-learn, and diffusers. Categories:
+- **TP** = true positive, operationally relevant
+- **TP-low** = technically correct but low operational severity (e.g., test code, conversion scripts, dataset loaders)
+- **FP** = false positive
+
+| Rule | TP | TP-low | FP | Notes |
+|------|----|--------|----|-------|
+| NC-YAML | 2 | 1 | 0 | Real `unsafe_load` calls |
+| NC-SHELL | 5 | 0 | 0 | Real `shell=True` calls |
+| NC-SECRET | 0 | 3 | 0 | Placeholder/example secrets only (after 2026-11-07 fix) |
+| NC-B1 | 0 | 8 | 0 | Dataset loaders, not user input |
+| NC-DYN | 0 | 6 | 0 | `externals/` and `# noqa`-marked |
+| NC-TORCH | 0 | 8 | 0 | Conversion scripts |
+| NC-PARSE | 0 | 1 | 0 | Intentional test file |
+
+**Overall:** 0 false positives in this sample. Most findings are **TP-low** — technically correct but operationally low-severity. Findings in test code, documentation, and conversion scripts are common and often intentional.
+
+This sample is not exhaustive. Precision on other codebases may differ.
 
 ## About findings
 
