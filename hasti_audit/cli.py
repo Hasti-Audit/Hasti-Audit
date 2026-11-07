@@ -3,20 +3,28 @@ import argparse
 import sys
 from pathlib import Path
 from typing import List
+
 from hasti_audit.engine import audit_source
 from hasti_audit.reporters.console import render_console
 from hasti_audit.reporters.json_reporter import render_json
+
+
+SKIP_DIRS = {
+    ".git", "__pycache__", "venv", ".venv", "node_modules", "env", ".tox",
+    "docs", "docs_src", "tests", "test", "examples", "benchmarks",
+}
+
 
 def _iter_py_files(root: Path) -> List[Path]:
     if root.is_file():
         return [root] if root.suffix == ".py" else []
     files: List[Path] = []
-    skip = {".git", "__pycache__", "venv", ".venv", "node_modules", "env", ".tox"}
     for p in root.rglob("*.py"):
-        if any(part in skip for part in p.parts):
+        if any(part in SKIP_DIRS for part in p.parts):
             continue
         files.append(p)
     return sorted(files)
+
 
 def cmd_scan(args):
     root = Path(args.path).resolve()
@@ -53,6 +61,7 @@ def cmd_scan(args):
         return 1
     return 0
 
+
 def build_parser():
     p = argparse.ArgumentParser(prog="hasti_audit", description="Hasti AST static pre-check")
     sub = p.add_subparsers(dest="command", required=True)
@@ -67,10 +76,12 @@ def build_parser():
     s.set_defaults(func=cmd_scan)
     return p
 
+
 def main(argv=None):
     parser = build_parser()
     args = parser.parse_args(argv)
     return int(args.func(args))
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
