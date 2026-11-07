@@ -29,6 +29,7 @@ Hasti performs a scoped static pre-check on Python source code. It looks for sel
 - **NC-B3 (data leakage):** Flags `fit` or `fit_transform` on full datasets when a `train_test_split` exists in the same function. May miss cross-function or multi-file leakage.
 - **NC-SECRET (hardcoded secrets):** May also fire on placeholder or example secrets in documentation and tutorials.
 
+- **NC-B3 (leakage):** Fires only when `train_test_split` appears in the **same function** as the scaler/preprocessor fit. Leakage across function boundaries, or in files without a local split, is not detected. (Fixed 2026-11-07: previous versions incorrectly scanned at file scope.)
 ## About findings
 
 - Reports contain **file paths, line numbers, and variable names only** — never the secret value itself.
