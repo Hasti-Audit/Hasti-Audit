@@ -1,38 +1,4 @@
-"""
-=====================================================================
-HASTI — LIMITATIONS.md COMPLETE FIX (From Scratch)
-=====================================================================
-This cell:
-1. Clones the repo fresh.
-2. Rebuilds LIMITATIONS.md from a clean template
-   (no duplicate NC-B3, no misleading --anonymize claim).
-3. Prints the FULL final file.
-4. You copy it and paste into GitHub.
-
-Nothing is committed automatically.
-"""
-import subprocess, os, shutil, pathlib, sys
-
-WORK = "/content/limitations_fix"
-HASTI_URL = "https://github.com/Hasti-Audit/Hasti-Audit"
-
-# --- 1) Fresh clone ---
-if os.path.exists(WORK):
-    shutil.rmtree(WORK)
-os.makedirs(WORK)
-
-r = subprocess.run(["git", "clone", "--depth", "1", HASTI_URL, f"{WORK}/_hasti"],
-                   capture_output=True, text=True)
-if r.returncode != 0:
-    print("❌ Clone failed:", r.stderr)
-    sys.exit(1)
-print("✅ Repo cloned.")
-
-REPO = pathlib.Path(f"{WORK}/_hasti")
-lim_path = REPO / "LIMITATIONS.md"
-
-# --- 2) Clean, complete LIMITATIONS.md content ---
-FINAL_CONTENT = """# Hasti Audit — Limitations
+# Hasti Audit — Limitations
 
 **Last updated:** 2026-11-07
 **Applies to:** Hasti AI Audit v12 / Client Scanner v12r
@@ -87,33 +53,3 @@ Broader assurance work (deep manual review, organizational controls, formal comp
 ## Responsible use
 
 Use Hasti outputs as an **early technical input** inside your own risk and engineering process—not as a final compliance or safety sign-off.
-"""
-
-# --- 3) Write it ---
-lim_path.write_text(FINAL_CONTENT, encoding="utf-8")
-print("✅ LIMITATIONS.md rebuilt from clean template.")
-
-# --- 4) Show diff vs. current GitHub version ---
-print("\n" + "=" * 70)
-print("DIFF vs. current GitHub version")
-print("=" * 70)
-r = subprocess.run(["git", "diff", "LIMITATIONS.md"], cwd=REPO, capture_output=True, text=True)
-if r.stdout:
-    print(r.stdout)
-else:
-    print("(no changes — file already matches this template)")
-
-# --- 5) Print FULL content for copy-paste ---
-print("\n" + "=" * 70)
-print("FULL FINAL CONTENT — copy everything below this line")
-print("=" * 70)
-print(FINAL_CONTENT)
-print("=" * 70)
-print("END OF FILE")
-print("=" * 70)
-
-print("\nNEXT STEP:")
-print("1. Copy the content between the two '=' lines above.")
-print("2. Open: https://github.com/Hasti-Audit/Hasti-Audit/edit/main/LIMITATIONS.md")
-print("3. Select all (Ctrl+A / Cmd+A), delete, paste the new content.")
-print("4. Commit with message: 'docs: rebuild LIMITATIONS.md (fix duplicate NC-B3, anonymize note)'")
