@@ -9,14 +9,21 @@ Hasti performs a **scoped static pre-check** on Python source code. It looks for
 
 ## What Hasti does not do
 
-- Does not scan Jupyter Notebooks (.ipynb) or non-Python files
-- May skip directories named `tests/` or `examples/` by default (configurable in CLI)
 - Does not prove that code is safe or secure
 - Does not replace a full security audit, penetration test, or code review by a qualified team
 - Does not provide legal advice or EU AI Act / MDR / ISO certification
 - Does not analyze non-Python components, deployed infrastructure, or runtime behavior by default
 - Does not guarantee detection of obfuscated, generated, or multi-stage vulnerable flows
 - Does not validate model accuracy, fairness, clinical correctness, or business logic
+- Does not scan Jupyter Notebooks (.ipynb) or non-Python files
+
+## Which files are scanned
+
+By default, the CLI skips these directories:
+
+`.git`, `__pycache__`, `venv`, `.venv`, `node_modules`, `env`, `.tox`, `docs`, `docs_src`, `tests`, `test`, `examples`, `benchmarks`.
+
+Scanning a specific file or directory directly bypasses this skip list.
 
 ## Rule-specific limitations
 
@@ -27,7 +34,7 @@ Hasti performs a **scoped static pre-check** on Python source code. It looks for
 - **NC-YAML (unsafe YAML):** Flags `yaml.load` without `SafeLoader`. May also flag legitimate uses in controlled environments.
 - **NC-SQL (dynamic SQL):** Flags dynamic SQL built with f-strings, `.format()`, `%`, or `+`. May also flag legitimate uses in reporting or analytics.
 - **NC-B3 (leakage):** Fires only when `train_test_split` appears in the **same function** as the scaler/preprocessor fit on a full-data variable. Leakage across function boundaries, or in files without a local split, is not detected. (Fixed 2026-11-07: previous versions incorrectly scanned at file scope, producing false positives.)
-- **NC-SECRET (hardcoded secrets):** May also fire on placeholder or example secrets in documentation and tutorials. Files under `docs_src/`, `docs/`, and `examples/` are common sources of such findings.
+- **NC-SECRET (hardcoded secrets):** May also fire on placeholder or example secrets. Files under `docs_src/`, `docs/`, and `examples/` are common sources of such findings and are now skipped by default.
 
 ## About findings
 
