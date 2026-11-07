@@ -59,3 +59,4 @@
 These findings are **technical indicators** from a static pre-check. They are **not** confirmed vulnerabilities. Manual review is required to verify exploitability. A finding indicates a detected pattern, not a confirmed vulnerability.
 
 **Limitations:** https://github.com/Hasti-Audit/Hasti-Audit/blob/main/LIMITATIONS.md
+Snippets in `review_sample.csv` show **one line only**. Multi-line calls (e.g. `subprocess.Popen(...)` with `shell=True` on the next line) may appear as false positives when viewed in isolation. Manual reviewers should inspect the full call, not just the snippet.
