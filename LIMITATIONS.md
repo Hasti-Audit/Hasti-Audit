@@ -32,7 +32,7 @@ Hasti performs a scoped static pre-check on Python source code. It looks for sel
 ## About findings
 
 - Reports contain **file paths, line numbers, and variable names only** — never the secret value itself.
-- A regression test (`test_privacy_no_secret_leak.py`) enforces this guarantee in CI.
+- A regression test (`test_privacy_no_secret_leak.py`) enforces this guarantee.
 - An optional `--anonymize` flag (planned) will hash file paths. This protects internal structure but limits targeted consulting advice. Default: off. Findings are **technical indicators** for human review
 - Test code and demos often trigger rules intentionally
 - False negatives and false positives are possible
