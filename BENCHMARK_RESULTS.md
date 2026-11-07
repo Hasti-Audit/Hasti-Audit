@@ -51,7 +51,9 @@
 1. **Scans a few thousand files in about two minutes:** Hasti v12 scans 2,934 files in 121.8 seconds.
 2. **Zero Read Errors:** The engine is stable even on complex, real-world codebases.
 3. **Broad Coverage:** Detects multiple vulnerability patterns across diverse projects.
-
+4. **Privacy-verified:** A regression test confirms that secret *values* never
+   appear in reports — only file paths, line numbers, and variable names.
+   Mutation-tested to ensure the test is effective.
 ## Important Note
 
 These findings are **technical indicators** from a static pre-check. They are **not** confirmed vulnerabilities. Manual review is required to verify exploitability. A finding indicates a detected pattern, not a confirmed vulnerability.
