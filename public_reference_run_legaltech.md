@@ -10,9 +10,7 @@
 
 ## Why this report exists
 
-This is a **reproducible public run** of the Hasti AI Audit tool on `scikit-learn`, the most widely used machine learning library in the world (used by FinTech, HealthTech, and LegalTech companies).
-
-The goal was to demonstrate that even the most trusted open-source AI libraries contain hundreds of static code patterns that represent potential compliance and security risks.
+This is a **reproducible public run** of the Hasti AI Audit tool on `scikit-learn`, the most widely used machine learning library in the world (used by FinTech, HealthTech, and LegalTech companies). The goal was to demonstrate that even the most trusted open-source AI libraries contain hundreds of static code patterns that represent potential compliance and security risks.
 
 ---
 
@@ -20,8 +18,8 @@ The goal was to demonstrate that even the most trusted open-source AI libraries 
 
 | Severity | Count | Example Defect |
 |----------|-------|----------------|
-| CRITICAL | 412   | Unsafe `pickle.load` or `eval()` usage |
-| HIGH     | 295   | Data leakage (`.fit_transform` on full dataset) |
+| CRITICAL | 412 | Unsafe `pickle.load` or `eval()` usage |
+| HIGH | 295 | Data leakage (`.fit_transform` on full dataset) |
 
 *(Note: 707 total findings detected in the first 100 files. Full report available on request.)*
 
@@ -31,7 +29,7 @@ The goal was to demonstrate that even the most trusted open-source AI libraries 
 
 1. **Industrial-scale detection:** The tool successfully scanned a massive, highly complex codebase and identified 707 distinct compliance patterns.
 2. **Real-world relevance:** `scikit-learn` is used directly by LegalTech and FinTech companies for predictive modeling. The detected patterns (like unsafe serialization) are exactly the vulnerabilities addressed by EU AI Act Article 15.
-3. **No false negatives:** The tool does not miss critical patterns in large codebases.
+3. **Pattern Coverage:** The tool matched a broad set of patterns across this codebase. This does not guarantee that no vulnerable pattern was missed; see [LIMITATIONS.md](https://hasti-audit.github.io/Hasti-Audit/LIMITATIONS.md) for known gaps.
 
 ---
 
