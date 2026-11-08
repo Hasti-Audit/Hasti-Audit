@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benchmark Results — Hasti AI Audit</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.6;margin:0;padding:0}
+.container{max-width:800px;margin:0 auto;padding:40px 20px}
+nav{margin-bottom:30px;text-align:center}
+nav a{color:#58a6ff;text-decoration:none;margin:0 10px;font-size:.95em}
+nav a:hover{text-decoration:underline}
+h1{color:#fff;font-size:2em;margin-bottom:20px}
+h2{color:#fff;font-size:1.4em;margin-top:30px;margin-bottom:15px}
+p{margin-bottom:15px}
+ul{margin-bottom:15px;padding-left:25px}
+li{margin-bottom:8px}
+code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:.9em;color:#79c0ff}
+a{color:#58a6ff}
+strong{color:#fff}
+table{width:100%;border-collapse:collapse;margin:20px 0}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #30363d}
+th{color:#fff;background:#161b22}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid #30363d;font-size:.9em;color:#8b949e;text-align:center}
+</style>
+</head>
+<body>
+<div class="container">
+<nav>
+<a href="index.html">Home</a>
+<a href="pricing.html">Pricing</a>
+<a href="limitations.html">Limitations</a>
+<a href="privacy.html">Privacy</a>
+<a href="impressum.html">Impressum</a>
+</nav>
+
+<h1>Hasti v12 – Real-World Benchmark Results</h1>
+<p><strong>Date:</strong> 2026-11-06<br><strong>Engine:</strong> Hasti Audit v12 (Modular)<br><strong>Environment:</strong> Google Colab (Linux, Python 3.13)</p>
+
+<h2>Summary</h2>
+<table>
+<tr><th>Metric</th><th>Value</th></tr>
+<tr><td>Repositories Scanned</td><td>10</td></tr>
+<tr><td>Python files scanned</td><td>2,934</td></tr>
+<tr><td>Total findings</td><td>220 (includes 1 parse error)</td></tr>
+<tr><td>Total Time</td><td>121.8 seconds</td></tr>
+<tr><td>Average Speed</td><td>41.5 ms/file</td></tr>
+<tr><td>Read Errors</td><td>0</td></tr>
+</table>
+<p><strong>Note:</strong> <code>tests/</code> and <code>examples/</code> directories were skipped by default. The file counts below are therefore lower than the full repository size. The number of findings has not been manually reviewed.</p>
+
+<h2>Repositories Tested</h2>
+<ol>
+<li><strong>pytorch/examples</strong> – 87 files, 17 findings</li>
+<li><strong>ultralytics/yolov5</strong> – 42 files, 19 findings</li>
+<li><strong>karpathy/nanoGPT</strong> – 15 files, 8 findings</li>
+<li><strong>openai/openai-cookbook</strong> – 1 file, 0 findings (mostly .ipynb notebooks, not scanned)</li>
+<li><strong>microsoft/ML-For-Beginners</strong> – 14 files, 1 finding</li>
+<li><strong>scikit-learn/scikit-learn</strong> – 374 files, 48 findings</li>
+<li><strong>streamlit/streamlit</strong> – 821 files, 14 findings (includes 1 parse error)</li>
+<li><strong>tiangolo/fastapi</strong> – 454 files, 15 findings</li>
+<li><strong>huggingface/diffusers</strong> – 1,108 files, 98 findings</li>
+<li><strong>psf/requests</strong> – 18 files, 0 findings</li>
+</ol>
+
+<h2>Findings by Rule</h2>
+<table>
+<tr><th>Rule</th><th>Count</th><th>Description</th></tr>
+<tr><td>NC-TORCH</td><td>116</td><td><code>torch.load</code> without <code>weights_only=True</code> (relevant for PyTorch &lt; 2.6)</td></tr>
+<tr><td>NC-B3</td><td>25</td><td>Scaler fit on full dataset (leakage)</td></tr>
+<tr><td>NC-B1</td><td>24</td><td>Unsafe <code>pickle</code> / <code>joblib</code> deserialization</td></tr>
+<tr><td>NC-DYN</td><td>18</td><td><code>eval()</code> / <code>exec()</code> usage</td></tr>
+<tr><td>NC-SECRET</td><td>17</td><td>Hardcoded secrets (AWS, Stripe, etc.)</td></tr>
+<tr><td>NC-SHELL</td><td>15</td><td><code>subprocess</code> with <code>shell=True</code></td></tr>
+<tr><td>NC-YAML</td><td>4</td><td>Unsafe <code>yaml.load()</code></td></tr>
+</table>
+<p><strong>Parse errors (not findings):</strong> 1 (in streamlit)</p>
+
+<h2>What This Demonstrates</h2>
+<ol>
+<li><strong>Scans a few thousand files in about two minutes:</strong> Hasti v12 scans 2,934 files in 121.8 seconds.</li>
+<li><strong>Zero Read Errors:</strong> The engine is stable even on complex, real-world codebases.</li>
+<li><strong>Broad Coverage:</strong> Detects multiple vulnerability patterns across diverse projects.</li>
+<li><strong>Privacy-verified:</strong> A regression test confirms that secret <em>values</em> never appear in reports — only file paths, line numbers, and variable names. Mutation-tested to ensure the test is effective.</li>
+</ol>
+
+<h2>Important Note</h2>
+<p>These findings are <strong>technical indicators</strong> from a static pre-check. They are <strong>not</strong> confirmed vulnerabilities. Manual review is required to verify exploitability. A finding indicates a detected pattern, not a confirmed vulnerability.</p>
+<p><strong>Limitations:</strong> <a href="limitations.html">limitations.html</a></p>
+<p>Snippets in <code>review_sample.csv</code> show <strong>one line only</strong>. Multi-line calls (e.g. <code>subprocess.Popen(...)</code> with <code>shell=True</code> on the next line) may appear as false positives when viewed in isolation. Manual reviewers should inspect the full call, not just the snippet.</p>
+
+<footer>
+© 2026 Ahmad Sabawoon Rasooli · Independent AI Auditor · Bad Homburg, Germany
+</footer>
+</div>
+</body>
+</html>
