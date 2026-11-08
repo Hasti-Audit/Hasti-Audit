@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy & Data Handling — Hasti AI Audit</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.6;margin:0;padding:0}
+.container{max-width:800px;margin:0 auto;padding:40px 20px}
+nav{margin-bottom:30px;text-align:center}
+nav a{color:#58a6ff;text-decoration:none;margin:0 10px;font-size:.95em}
+nav a:hover{text-decoration:underline}
+h1{color:#fff;font-size:2em;margin-bottom:20px}
+h2{color:#fff;font-size:1.4em;margin-top:30px;margin-bottom:15px}
+p{margin-bottom:15px}
+ul{margin-bottom:15px;padding-left:25px}
+li{margin-bottom:8px}
+code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:.9em;color:#79c0ff}
+a{color:#58a6ff}
+strong{color:#fff}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid #30363d;font-size:.9em;color:#8b949e;text-align:center}
+</style>
+</head>
+<body>
+<div class="container">
+<nav>
+<a href="index.html">Home</a>
+<a href="pricing.html">Pricing</a>
+<a href="limitations.html">Limitations</a>
+<a href="privacy.html">Privacy</a>
+<a href="impressum.html">Impressum</a>
+</nav>
+
+<h1>Hasti Audit — Privacy &amp; Data Handling</h1>
+<p><strong>Last updated:</strong> 2026-11-07</p>
+
+<h2>What leaves the client's infrastructure?</h2>
+<p>Only the generated report. Source code never leaves the client's servers.</p>
+
+<h2>What is in the report?</h2>
+<p>Each finding contains:</p>
+<ul>
+<li><strong>File path</strong> (e.g., <code>src/payments/stripe.py</code>)</li>
+<li><strong>Line number</strong> (e.g., <code>42</code>)</li>
+<li><strong>Rule ID</strong> (e.g., <code>NC-SECRET</code>)</li>
+<li><strong>Severity</strong> (e.g., <code>HIGH</code>)</li>
+<li><strong>Variable name</strong> (e.g., <code>STRIPE_API_KEY</code>)</li>
+</ul>
+
+<h2>What is NOT in the report?</h2>
+<ul>
+<li><strong>Secret values</strong> are never included. Only the variable name is reported.</li>
+<li><strong>Source code lines</strong> are not included by default.</li>
+<li><strong>Environment variables, runtime data, model weights</strong> are never accessed.</li>
+</ul>
+
+<h2>Verification</h2>
+<p>A regression test enforces this guarantee: <code>hasti_audit/tests/test_privacy_no_secret_leak.py</code></p>
+<p><strong>Mutation-tested (2026-11-07):</strong> The test passes on the real code and fails when a deliberate leak is injected (<code>AssertionError</code> on the leaked secret). This proves the test is effective, not vacuous.</p>
+
+<h2>Optional: path anonymization</h2>
+<p>A planned <code>--anonymize</code> flag will hash file paths (SHA-256, first 8 hex chars). This protects internal project structure, but limits the auditor's ability to give targeted advice. Default: <strong>off</strong>.</p>
+
+<h2>Responsible use</h2>
+<p>Hasti is a <strong>technical pre-check</strong>, not a certification. See <a href="limitations.html">Limitations</a> for scope and limits.</p>
+
+<footer>
+© 2026 Ahmad Sabawoon Rasooli · Independent AI Auditor · Bad Homburg, Germany
+</footer>
+</div>
+</body>
+</html>
