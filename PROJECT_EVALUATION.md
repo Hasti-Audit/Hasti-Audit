@@ -1,2 +1,1 @@
-
-chore: remove empty PROJECT_EVALUATION.md
+chore: empty PROJECT_EVALUATION.md
