@@ -21,6 +21,7 @@ strong{color:#fff}
 table{width:100%;border-collapse:collapse;margin:20px 0}
 th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #30363d}
 th{color:#fff;background:#161b22}
+.warning{background:rgba(210,153,34,0.15);border-left:4px solid #d29922;padding:15px 20px;margin:20px 0;border-radius:4px}
 footer{margin-top:40px;padding-top:20px;border-top:1px solid #30363d;font-size:.9em;color:#8b949e;text-align:center}
 </style>
 </head>
@@ -37,17 +38,24 @@ footer{margin-top:40px;padding-top:20px;border-top:1px solid #30363d;font-size:.
 <h1>Hasti v12 – Real-World Benchmark Results</h1>
 <p><strong>Date:</strong> 2026-11-06<br><strong>Engine:</strong> Hasti Audit v12 (Modular)<br><strong>Environment:</strong> Google Colab (Linux, Python 3.13)</p>
 
+<div class="warning">
+<strong>Important — benchmark predates the 2026-11-07 fixes.</strong>
+The table below reflects the engine <em>before</em> the NC-B3 and NC-SECRET fixes on 2026-11-07.
+After those fixes, re-scanning the same four repositories showed: NC-SECRET dropped from 17 to 3, NC-B3 from 25 to 0 in the re-scanned sample.
+See <a href="limitations.html">limitations.html</a> for the current state and the manual review sample.
+</div>
+
 <h2>Summary</h2>
 <table>
 <tr><th>Metric</th><th>Value</th></tr>
 <tr><td>Repositories Scanned</td><td>10</td></tr>
 <tr><td>Python files scanned</td><td>2,934</td></tr>
-<tr><td>Total findings</td><td>220 (includes 1 parse error)</td></tr>
+<tr><td>Total events</td><td>220 (219 findings + 1 parse error)</td></tr>
 <tr><td>Total Time</td><td>121.8 seconds</td></tr>
 <tr><td>Average Speed</td><td>41.5 ms/file</td></tr>
 <tr><td>Read Errors</td><td>0</td></tr>
 </table>
-<p><strong>Note:</strong> <code>tests/</code> and <code>examples/</code> directories were skipped by default. The file counts below are therefore lower than the full repository size. The number of findings has not been manually reviewed.</p>
+<p><strong>Note:</strong> <code>tests/</code> and <code>examples/</code> directories were skipped by default. The file counts below are therefore lower than the full repository size. <strong>A sample of 33 findings was manually reviewed</strong> (see <a href="limitations.html">limitations.html</a>); the remaining findings were not manually reviewed.</p>
 
 <h2>Repositories Tested</h2>
 <ol>
@@ -63,14 +71,14 @@ footer{margin-top:40px;padding-top:20px;border-top:1px solid #30363d;font-size:.
 <li><strong>psf/requests</strong> – 18 files, 0 findings</li>
 </ol>
 
-<h2>Findings by Rule</h2>
+<h2>Findings by Rule (pre-fix engine, 2026-11-06)</h2>
 <table>
 <tr><th>Rule</th><th>Count</th><th>Description</th></tr>
 <tr><td>NC-TORCH</td><td>116</td><td><code>torch.load</code> without <code>weights_only=True</code> (relevant for PyTorch &lt; 2.6)</td></tr>
-<tr><td>NC-B3</td><td>25</td><td>Scaler fit on full dataset (leakage)</td></tr>
+<tr><td>NC-B3</td><td>25</td><td>Scaler fit on full dataset (leakage) — fixed 2026-11-07</td></tr>
 <tr><td>NC-B1</td><td>24</td><td>Unsafe <code>pickle</code> / <code>joblib</code> deserialization</td></tr>
 <tr><td>NC-DYN</td><td>18</td><td><code>eval()</code> / <code>exec()</code> usage</td></tr>
-<tr><td>NC-SECRET</td><td>17</td><td>Hardcoded secrets (AWS, Stripe, etc.)</td></tr>
+<tr><td>NC-SECRET</td><td>17</td><td>Hardcoded secrets (AWS, Stripe, etc.) — fixed 2026-11-07</td></tr>
 <tr><td>NC-SHELL</td><td>15</td><td><code>subprocess</code> with <code>shell=True</code></td></tr>
 <tr><td>NC-YAML</td><td>4</td><td>Unsafe <code>yaml.load()</code></td></tr>
 </table>
@@ -81,7 +89,7 @@ footer{margin-top:40px;padding-top:20px;border-top:1px solid #30363d;font-size:.
 <li><strong>Scans a few thousand files in about two minutes:</strong> Hasti v12 scans 2,934 files in 121.8 seconds.</li>
 <li><strong>Zero Read Errors:</strong> The engine is stable even on complex, real-world codebases.</li>
 <li><strong>Broad Coverage:</strong> Detects multiple vulnerability patterns across diverse projects.</li>
-<li><strong>Privacy-verified:</strong> A regression test confirms that secret <em>values</em> never appear in reports — only file paths, line numbers, and variable names. Mutation-tested to ensure the test is effective.</li>
+<li><strong>Privacy-verified:</strong> A regression test checks that secret <em>values</em> never appear in reports — only file paths, line numbers, and variable names. Mutation-tested to confirm the test catches a deliberate leak.</li>
 </ol>
 
 <h2>Important Note</h2>
