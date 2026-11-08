@@ -1,26 +1,264 @@
-<!-- Services & Pricing Section -->
-<section class="services" style="padding: 60px 20px; text-align: center; background-color: #161b22;">
-    <div class="container" style="max-width: 800px; margin: 0 auto;">
-        <h2 style="color: #ffffff; font-size: 2.5em; margin-bottom: 20px;">Enterprise-Grade AI Audits (v12)</h2>
-        <p style="color: #8b949e; font-size: 1.2em; margin-bottom: 40px;">
-            We detect what others miss. Our 3-layer static analysis penetrates obfuscation layers (aliases, nested classes, and complex SQL) to deliver cryptographic evidence in hours, not weeks.
-        </p>
-        
-        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 40px;">
-            <div style="background-color: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 20px; width: 250px;">
-                <h3 style="color: #58a6ff; margin-top: 0;">Tier 1</h3>
-                <p style="color: #c9d1d9;">Static Code Screening</p>
-                <p style="font-size: 1.5em; color: #ffffff; font-weight: bold;">From €900</p>
-            </div>
-            <div style="background-color: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 20px; width: 250px;">
-                <h3 style="color: #58a6ff; margin-top: 0;">Full Package</h3>
-                <p style="color: #c9d1d9;">3-Layer Analysis + Evidence Seal</p>
-                <p style="font-size: 1.5em; color: #ffffff; font-weight: bold;">€4,500</p>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasti AI Audit — Scoped Static Pre-Check for Python/ML Code</title>
+  <meta name="description" content="Privacy-first static pre-check for Python/ML codebases. Runs on your own infrastructure. Findings are technical indicators for human review.">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0d1117;
+      color: #c9d1d9;
+      line-height: 1.6;
+    }
+    a { color: #58a6ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
 
-        <a href="pricing.html" style="display: inline-block; background-color: #58a6ff; color: #0d1117; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 1.2em; transition: background-color 0.2s;">
-            View Transparent Pricing & Engagement Tiers
-        </a>
+    /* Header */
+    header {
+      padding: 20px 0;
+      border-bottom: 1px solid #30363d;
+    }
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    header .logo {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #ffffff;
+    }
+    header nav a {
+      margin-left: 20px;
+      color: #8b949e;
+      font-size: 0.95em;
+    }
+    header nav a:hover { color: #58a6ff; }
+
+    /* Hero */
+    .hero {
+      padding: 80px 20px 60px;
+      text-align: center;
+    }
+    .hero h1 {
+      color: #ffffff;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      color: #8b949e;
+      font-size: 1.2em;
+      margin-bottom: 30px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Services */
+    .services {
+      padding: 60px 20px;
+      background-color: #161b22;
+    }
+    .services h2 {
+      color: #ffffff;
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .services > .container > p {
+      color: #8b949e;
+      font-size: 1.1em;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .tiers {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .tier {
+      background-color: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 20px;
+      width: 250px;
+      text-align: center;
+    }
+    .tier h3 {
+      color: #58a6ff;
+      margin-top: 0;
+      font-size: 1.3em;
+    }
+    .tier .desc { color: #c9d1d9; margin: 10px 0; }
+    .tier .price {
+      font-size: 1.5em;
+      color: #ffffff;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .tier .note {
+      font-size: 0.85em;
+      color: #8b949e;
+      margin-top: 8px;
+    }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .cta a {
+      display: inline-block;
+      background-color: #58a6ff;
+      color: #0d1117;
+      padding: 15px 30px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1.1em;
+      transition: background-color 0.2s;
+    }
+    .cta a:hover {
+      background-color: #79c0ff;
+      text-decoration: none;
+    }
+
+    /* Privacy callout */
+    .privacy-callout {
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .privacy-callout h2 {
+      color: #ffffff;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+    .privacy-callout p {
+      color: #8b949e;
+      max-width: 700px;
+      margin: 0 auto 20px;
+    }
+    .privacy-callout ul {
+      text-align: left;
+      max-width: 600px;
+      margin: 20px auto;
+      list-style: none;
+    }
+    .privacy-callout li {
+      margin-bottom: 10px;
+      color: #c9d1d9;
+    }
+    .privacy-callout li strong { color: #ffffff; }
+
+    /* Footer */
+    footer {
+      padding: 40px 20px;
+      border-top: 1px solid #30363d;
+      text-align: center;
+      color: #8b949e;
+      font-size: 0.9em;
+    }
+    footer a { color: #58a6ff; }
+    footer .links { margin-bottom: 15px; }
+    footer .links a { margin: 0 10px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="logo">Hasti AI Audit</div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="LIMITATIONS.md">Limitations</a>
+        <a href="PRIVACY.md">Privacy</a>
+        <a href="impressum.html">Impressum</a>
+      </nav>
     </div>
-</section>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Privacy-first static pre-check for Python/ML code</h1>
+      <p>
+        A scoped static analysis that runs on your own infrastructure — your source code
+        never leaves your premises. You send only the generated report (file paths,
+        line numbers, variable names). Findings are technical indicators for human review,
+        not confirmed vulnerabilities.
+      </p>
+    </div>
+  </section>
+
+  <section class="services">
+    <div class="container">
+      <h2>Engagement Options</h2>
+      <p>
+        A scoped pre-check, not a full security audit and not a certification.
+        All tiers include a short written report and a follow-up call.
+      </p>
+      <div class="tiers">
+        <div class="tier">
+          <h3>Free Pilot</h3>
+          <div class="desc">Scoped module + short report</div>
+          <div class="price">€0</div>
+          <div class="note">1–2 pages, 15-min call</div>
+        </div>
+        <div class="tier">
+          <h3>Tier 1</h3>
+          <div class="desc">Static Code Screening</div>
+          <div class="price">From €900</div>
+          <div class="note">Scoped repository, written report</div>
+        </div>
+      </div>
+      <div class="cta">
+        <a href="pricing.html">View Pricing &amp; Pilot Options</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="privacy-callout">
+    <div class="container">
+      <h2>Privacy by design</h2>
+      <p>
+        Your source code stays on your infrastructure. The scanner is open source and can be
+        reviewed by your IT security team before it runs.
+      </p>
+      <ul>
+        <li><strong>No secret values in reports</strong> — only variable names.</li>
+        <li><strong>No source code lines</strong> in reports by default.</li>
+        <li><strong>No access</strong> to your environment, runtime data, or model weights.</li>
+      </ul>
+      <p>
+        Details: <a href="PRIVACY.md">PRIVACY.md</a> ·
+        Scope: <a href="LIMITATIONS.md">LIMITATIONS.md</a>
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="LIMITATIONS.md">Limitations</a>
+      <a href="PRIVACY.md">Privacy</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="https://github.com/Hasti-Audit/Hasti-Audit">GitHub</a>
+    </div>
+    <div>
+      © 2026 Ahmad Sabawoon Rasooli · Independent AI Auditor · Bad Homburg, Germany
+    </div>
+    <div style="margin-top: 8px;">
+      This is a technical pre-check, not a certification.
+    </div>
+  </footer>
+
+</body>
+</html>
