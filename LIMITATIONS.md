@@ -30,7 +30,7 @@ Scanning a specific file or directory directly bypasses this skip list.
 - **NC-B1 (unsafe deserialization):** Flags `pickle.load`, `joblib.load`, and similar. May also flag legitimate uses of these libraries in trusted contexts.
 - **NC-TORCH (unsafe `torch.load`):** Flags `torch.load` without `weights_only=True`. Relevant for PyTorch < 2.6, where `weights_only=True` was not the default.
 - **NC-SHELL (subprocess shell):** Flags `subprocess` with `shell=True`, and `os.system` / `os.popen`. May also flag legitimate uses in test scripts or build tooling.
-- **NC-DYN (dynamic execution):** Flags `eval()` and `exec()`. May also flag legitimate uses in configuration or template engines.
+- **NC-DYN (dynamic execution):** Flags `eval()` and `exec()`. May also flag legitimate uses in configuration or template engines. Lines marked `# noqa` are still flagged; an option to respect `# noqa` is planned.
 - **NC-YAML (unsafe YAML):** Flags `yaml.load` without `SafeLoader`. May also flag legitimate uses in controlled environments.
 - **NC-SQL (dynamic SQL):** Flags dynamic SQL built with f-strings, `.format()`, `%`, or `+`. May also flag legitimate uses in reporting or analytics.
 - **NC-B3 (leakage):** Fires only when `train_test_split` appears in the **same function** as the scaler/preprocessor fit on a full-data variable. Leakage across function boundaries, or in files without a local split, is not detected. (Fixed 2026-11-07: previous versions incorrectly scanned at file scope, producing false positives.)
@@ -38,7 +38,7 @@ Scanning a specific file or directory directly bypasses this skip list.
 
 ## Manual review sample (2026-11-07)
 
-The following table summarizes a **manual review of 36 findings** sampled from fastapi, streamlit, scikit-learn, and diffusers. Categories:
+The following table summarizes a **manual review of 33 rule findings** sampled from fastapi, streamlit, scikit-learn, and diffusers. Categories:
 - **TP** = true positive, operationally relevant
 - **TP-low** = technically correct but low operational severity (e.g., test code, conversion scripts, dataset loaders)
 - **FP** = false positive
@@ -48,14 +48,17 @@ The following table summarizes a **manual review of 36 findings** sampled from f
 | NC-YAML | 2 | 1 | 0 | Real `unsafe_load` calls |
 | NC-SHELL | 5 | 0 | 0 | Real `shell=True` calls |
 | NC-SECRET | 0 | 3 | 0 | Placeholder/example secrets only (after 2026-11-07 fix) |
+| NC-B3 | 0 | 0 | 0 | No findings in this sample after the 2026-11-07 fix |
 | NC-B1 | 0 | 8 | 0 | Dataset loaders, not user input |
 | NC-DYN | 0 | 6 | 0 | `externals/` and `# noqa`-marked |
 | NC-TORCH | 0 | 8 | 0 | Conversion scripts |
-| NC-PARSE | 0 | 1 | 0 | Intentional test file |
+| **Total** | **7** | **26** | **0** | |
 
-**Method and caveat:** This sample was also used to tune the rules on 2026-11-07 (specifically: removing enum-like and CORS-header false positives in NC-SECRET, and fixing the file-scope bug in NC-B3). It therefore reflects **post-tuning behavior on seen data**, not an independent precision estimate. An independent estimate would require a fresh sample from repositories not used during tuning.
+**Separate from findings:** 1 parse error was observed (an intentional test file with invalid syntax). Parse errors are reported as `NC-PARSE` with severity `INFO` and are not counted as findings.
 
-No false positives were observed in this sample. Most findings are **TP-low** — technically correct but operationally low-severity.
+**Method and caveat:** This sample was also used to tune the rules on 2026-11-07. Specifically, **8 false positives were found and fixed in NC-B3** (file-scope bug) and **2 false positives were fixed in NC-SECRET** (enum-like assignment and CORS header). The table therefore reflects **post-tuning behavior on seen data**, not an independent precision estimate. An independent estimate would require a fresh sample from repositories not used during tuning.
+
+Only **7 of 33 findings** were operationally relevant (5 `shell=True` and 2 `unsafe_load`). The remaining 26 were TP-low — technically correct but low-severity. This reflects open-source codebases that are already widely reviewed. Client codebases — especially internal ML code with less public review — may yield more operationally relevant findings. This is a hypothesis, not a measured claim; a free pilot is the way to test it.
 
 ## About findings
 
