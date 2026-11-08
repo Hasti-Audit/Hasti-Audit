@@ -1,1 +1,5 @@
-chore: remove legacy audit_tier1_tool_v12.py (superseded by hasti_audit/)
+# ⚠️ LEGACY FILE — DO NOT USE
+# This file is superseded by the modular `hasti_audit/` package.
+# It contains known bugs (NC-B3 file-scope, NC-SECRET enum/CORS) that
+# have been fixed in the current engine.
+# Use: python -m hasti_audit scan <path>
