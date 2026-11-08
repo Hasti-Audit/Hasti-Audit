@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limitations — Hasti AI Audit</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.6;margin:0;padding:0}
+.container{max-width:800px;margin:0 auto;padding:40px 20px}
+nav{margin-bottom:30px;text-align:center}
+nav a{color:#58a6ff;text-decoration:none;margin:0 10px;font-size:.95em}
+nav a:hover{text-decoration:underline}
+h1{color:#fff;font-size:2em;margin-bottom:20px}
+h2{color:#fff;font-size:1.4em;margin-top:30px;margin-bottom:15px}
+p{margin-bottom:15px}
+ul{margin-bottom:15px;padding-left:25px}
+li{margin-bottom:8px}
+code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:.9em;color:#79c0ff}
+a{color:#58a6ff}
+strong{color:#fff}
+table{width:100%;border-collapse:collapse;margin:20px 0}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #30363d}
+th{color:#fff;background:#161b22}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid #30363d;font-size:.9em;color:#8b949e;text-align:center}
+</style>
+</head>
+<body>
+<div class="container">
+<nav>
+<a href="index.html">Home</a>
+<a href="pricing.html">Pricing</a>
+<a href="limitations.html">Limitations</a>
+<a href="privacy.html">Privacy</a>
+<a href="impressum.html">Impressum</a>
+</nav>
+
+<h1>Hasti Audit — Limitations</h1>
+<p><strong>Last updated:</strong> 2026-11-07<br><strong>Applies to:</strong> Hasti AI Audit v12 / Client Scanner v12r</p>
+
+<h2>What Hasti does</h2>
+<p>Hasti performs a <strong>scoped static pre-check</strong> on Python source code. It looks for selected high-risk patterns commonly relevant to AI/data systems: unsafe deserialization, unsafe <code>torch.load</code>, dangerous dynamic execution, unsafe YAML loading, basic dynamic SQL construction, simple leakage indicators, unsafe <code>subprocess</code> shell usage, and simple secret-looking assignments.</p>
+
+<h2>What Hasti does not do</h2>
+<ul>
+<li>Does not prove that code is safe or secure</li>
+<li>Does not replace a full security audit, penetration test, or code review by a qualified team</li>
+<li>Does not provide legal advice or EU AI Act / MDR / ISO certification</li>
+<li>Does not analyze non-Python components, deployed infrastructure, or runtime behavior by default</li>
+<li>Does not guarantee detection of obfuscated, generated, or multi-stage vulnerable flows</li>
+<li>Does not validate model accuracy, fairness, clinical correctness, or business logic</li>
+<li>Does not scan Jupyter Notebooks (.ipynb) or non-Python files</li>
+</ul>
+
+<h2>Which files are scanned</h2>
+<p>By default, the CLI skips these directories:</p>
+<p><code>.git</code>, <code>__pycache__</code>, <code>venv</code>, <code>.venv</code>, <code>node_modules</code>, <code>env</code>, <code>.tox</code>, <code>docs</code>, <code>docs_src</code>, <code>tests</code>, <code>test</code>, <code>examples</code>, <code>benchmarks</code>.</p>
+<p>Scanning a specific file or directory directly bypasses this skip list.</p>
+
+<h2>Rule-specific limitations</h2>
+<ul>
+<li><strong>NC-B1 (unsafe deserialization):</strong> Flags <code>pickle.load</code>, <code>joblib.load</code>, and similar. May also flag legitimate uses of these libraries in trusted contexts.</li>
+<li><strong>NC-TORCH (unsafe torch.load):</strong> Flags <code>torch.load</code> without <code>weights_only=True</code>. Relevant for PyTorch &lt; 2.6, where <code>weights_only=True</code> was not the default.</li>
+<li><strong>NC-SHELL (subprocess shell):</strong> Flags <code>subprocess</code> with <code>shell=True</code>, and <code>os.system</code> / <code>os.popen</code>. May also flag legitimate uses in test scripts or build tooling.</li>
+<li><strong>NC-DYN (dynamic execution):</strong> Flags <code>eval()</code> and <code>exec()</code>. May also flag legitimate uses in configuration or template engines. Lines marked <code># noqa</code> are still flagged; an option to respect <code># noqa</code> is planned.</li>
+<li><strong>NC-YAML (unsafe YAML):</strong> Flags <code>yaml.load</code> without <code>SafeLoader</code>. May also flag legitimate uses in controlled environments.</li>
+<li><strong>NC-SQL (dynamic SQL):</strong> Flags dynamic SQL built with f-strings, <code>.format()</code>, <code>%</code>, or <code>+</code>. May also flag legitimate uses in reporting or analytics.</li>
+<li><strong>NC-B3 (leakage):</strong> Fires only when <code>train_test_split</code> appears in the <strong>same function</strong> as the scaler/preprocessor fit on a full-data variable. Leakage across function boundaries, or in files without a local split, is not detected. (Fixed 2026-11-07: previous versions incorrectly scanned at file scope, producing false positives.)</li>
+<li><strong>NC-SECRET (hardcoded secrets):</strong> Flags name-based and pattern-based secrets. Enum-like assignments (<code>apiKey = "apiKey"</code>) and CORS headers (<code>Access-Control-Allow-Credentials</code>) are excluded. May also fire on placeholder or example secrets; files under <code>docs_src/</code>, <code>docs/</code>, and <code>examples/</code> are skipped by default.</li>
+</ul>
+
+<h2>Manual review sample (2026-11-07)</h2>
+<p>The following table summarizes a <strong>manual review of 33 rule findings</strong> sampled from fastapi, streamlit, scikit-learn, and diffusers. Categories:</p>
+<ul>
+<li><strong>TP</strong> = true positive, operationally relevant</li>
+<li><strong>TP-low</strong> = technically correct but low operational severity (e.g., test code, conversion scripts, dataset loaders)</li>
+<li><strong>FP</strong> = false positive</li>
+</ul>
+<table>
+<tr><th>Rule</th><th>TP</th><th>TP-low</th><th>FP</th><th>Notes</th></tr>
+<tr><td>NC-YAML</td><td>2</td><td>1</td><td>0</td><td>Real <code>unsafe_load</code> calls</td></tr>
+<tr><td>NC-SHELL</td><td>5</td><td>0</td><td>0</td><td>Real <code>shell=True</code> calls</td></tr>
+<tr><td>NC-SECRET</td><td>0</td><td>3</td><td>0</td><td>Placeholder/example secrets only (after 2026-11-07 fix)</td></tr>
+<tr><td>NC-B3</td><td>0</td><td>0</td><td>0</td><td>No findings in this sample after the 2026-11-07 fix</td></tr>
+<tr><td>NC-B1</td><td>0</td><td>8</td><td>0</td><td>Dataset loaders, not user input</td></tr>
+<tr><td>NC-DYN</td><td>0</td><td>6</td><td>0</td><td><code>externals/</code> and <code># noqa</code>-marked</td></tr>
+<tr><td>NC-TORCH</td><td>0</td><td>8</td><td>0</td><td>Conversion scripts</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>7</strong></td><td><strong>26</strong></td><td><strong>0</strong></td><td></td></tr>
+</table>
+<p><strong>Separate from findings:</strong> 1 parse error was observed (an intentional test file with invalid syntax). Parse errors are reported as <code>NC-PARSE</code> with severity <code>INFO</code> and are not counted as findings.</p>
+<p><strong>Method and caveat:</strong> This sample was also used to tune the rules on 2026-11-07. Specifically, <strong>8 false positives were found and fixed in NC-B3</strong> (file-scope bug) and <strong>2 false positives were fixed in NC-SECRET</strong> (enum-like assignment and CORS header). The table therefore reflects <strong>post-tuning behavior on seen data</strong>, not an independent precision estimate. An independent estimate would require a fresh sample from repositories not used during tuning.</p>
+<p>Only <strong>7 of 33 findings</strong> were operationally relevant (5 <code>shell=True</code> and 2 <code>unsafe_load</code>). The remaining 26 were TP-low — technically correct but low-severity. This reflects open-source codebases that are already widely reviewed. Client codebases — especially internal ML code with less public review — may yield more operationally relevant findings. This is a hypothesis, not a measured claim; a free pilot is the way to test it.</p>
+
+<h2>About findings</h2>
+<ul>
+<li>Findings are <strong>technical indicators</strong> for human review.</li>
+<li>Reports contain <strong>file paths, line numbers, and variable names only</strong> — never the secret value itself.</li>
+<li>A regression test (<code>test_privacy_no_secret_leak.py</code>) enforces this guarantee and is mutation-tested to ensure it catches leaks.</li>
+<li>An optional <code>--anonymize</code> flag is <strong>planned but not yet implemented</strong>. It will hash file paths and will be opt-in only (default: off).</li>
+<li>Test code and demos often trigger rules intentionally.</li>
+<li>False negatives and false positives are possible.</li>
+<li>A clean report means "no matched rules in scope," not "no risk."</li>
+</ul>
+
+<h2>About the client-side scanner</h2>
+<ul>
+<li>Source code can remain on the client machine.</li>
+<li>Only the generated report needs to be shared.</li>
+<li>The scanner is a limited static engine, not the full consulting engagement.</li>
+</ul>
+
+<h2>About speed and pricing</h2>
+<p>Fast turnaround applies to the <strong>agreed narrow scope</strong>. Broader assurance work (deep manual review, organizational controls, formal compliance) takes longer and is a different service.</p>
+
+<h2>Responsible use</h2>
+<p>Use Hasti outputs as an <strong>early technical input</strong> inside your own risk and engineering process — not as a final compliance or safety sign-off.</p>
+
+<footer>
+© 2026 Ahmad Sabawoon Rasooli · Independent AI Auditor · Bad Homburg, Germany
+</footer>
+</div>
+</body>
+</html>
