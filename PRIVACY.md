@@ -26,13 +26,7 @@ Each finding contains:
 A regression test enforces this guarantee:
 `hasti_audit/tests/test_privacy_no_secret_leak.py`
 
-**Mutation-tested (2026-11-07):** The test passes on the real code and fails
-when a deliberate leak is injected (`AssertionError` on the leaked secret).
-This proves the test is effective, not vacuous.
-A regression test enforces this guarantee:
-`hasti_audit/tests/test_privacy_no_secret_leak.py`
-
-It verifies that no fragment of a secret value (Stripe key, AWS key, password) appears in the JSON report.
+**Mutation-tested (2026-11-07):** The test passes on the real code and fails when a deliberate leak is injected (`AssertionError` on the leaked secret). This proves the test is effective, not vacuous.
 
 ## Optional: path anonymization
 
