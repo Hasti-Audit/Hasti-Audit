@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,17 +27,42 @@
         .btn.outline { background-color: transparent; color: var(--accent-color); border: 1px solid var(--accent-color); }
         .btn.outline:hover { background-color: rgba(88, 166, 255, 0.1); }
         .discount { text-align: center; margin-top: 20px; color: #3fb950; font-weight: bold; }
+        nav { text-align: center; margin-bottom: 30px; }
+        nav a { color: var(--accent-color); text-decoration: none; margin: 0 10px; font-size: 0.95em; }
+        nav a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="container">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="LIMITATIONS.md">Limitations</a>
+            <a href="PRIVACY.md">Privacy</a>
+            <a href="impressum.html">Impressum</a>
+        </nav>
+
         <div class="header">
             <h1>Engagement Tiers (v12)</h1>
-            <p>Transparent fixed fees. Scope confirmed in writing. Delivered in <strong>hours, not weeks</strong>.</p>
+            <p>Transparent fixed fees. Scope confirmed in writing. Findings delivered in hours, not weeks.</p>
         </div>
 
         <div class="disclaimer">
-            <strong>Important:</strong> These are technical pre-checks only. They are not a certification and not legal advice.
+            <strong>Important:</strong> These are technical pre-checks only. They are not a certification and not legal advice. Findings are technical indicators for human review, not confirmed vulnerabilities.
+        </div>
+
+        <!-- Free Pilot -->
+        <div class="card featured" style="text-align: center; margin-bottom: 40px;">
+            <h2>Free Pilot — Start Here</h2>
+            <div class="price">€0</div>
+            <p>Try the pre-check on one clearly scoped module or repository — at no cost and with no obligation.</p>
+            <ul style="display: inline-block; text-align: left;">
+                <li>Short written report (1–2 pages)</li>
+                <li>15-minute call to walk through findings</li>
+                <li>No obligation to continue</li>
+                <li>Your source code stays on your infrastructure</li>
+            </ul>
+            <a href="mailto:Sabawoon.rasoli@gmail.com?subject=Free Pilot Inquiry" class="btn" style="max-width: 300px; margin: 20px auto 0 auto;">Request Free Pilot</a>
         </div>
 
         <div class="grid">
@@ -48,14 +72,15 @@
                 <div class="price">€900 <span>EUR</span></div>
                 <p>Focused static analysis of Python code for selected high-risk patterns.</p>
                 <ul>
-                    <li>Unsafe deserialization (pickle, joblib)</li>
+                    <li>Unsafe deserialization (pickle, joblib, torch.load)</li>
                     <li>SQL injection via .format() and f-strings</li>
                     <li>Dangerous calls (eval, exec, os.system)</li>
                     <li>Unsafe yaml.load usage</li>
-                    <li>Structured report with severity & line refs</li>
+                    <li>Hardcoded secrets</li>
+                    <li>Structured report with severity and line references</li>
                 </ul>
                 <div class="limit">
-                    <strong>Limitations:</strong> Static pattern matching only. Does not prove exploitability. Manual review recommended. Notebooks (.ipynb) not scanned. Findings are technical indicators, not confirmed vulnerabilities.
+                    <strong>Limitations:</strong> Static pattern matching only. Does not prove exploitability. Manual review recommended. Notebooks (.ipynb) not scanned. Findings are technical indicators, not confirmed vulnerabilities. See <a href="LIMITATIONS.md" style="color: #58a6ff;">LIMITATIONS.md</a>.
                 </div>
                 <a href="mailto:Sabawoon.rasoli@gmail.com?subject=Tier 1 Inquiry" class="btn outline">Inquire</a>
             </div>
@@ -80,18 +105,18 @@
 
             <!-- Tier 3 -->
             <div class="card">
-                <h2>Tier 3 — Full & Evidence</h2>
+                <h2>Tier 3 — Extended Review</h2>
                 <div class="price">€2,900 <span>EUR</span></div>
-                <p>Full 3-layer analysis with cryptographic evidence sealing.</p>
+                <p>Extended analysis with written interpretation of findings.</p>
                 <ul>
-                    <li>Everything in Tier 1 & 2</li>
+                    <li>Everything in Tier 1 &amp; 2</li>
                     <li>Complex edge cases (torch.load, nested YAML)</li>
-                    <li>SHA-256 evidence sealing</li>
                     <li>Written interpretation of findings</li>
+                    <li>Prioritized remediation roadmap</li>
                     <li>One final report + presentation</li>
                 </ul>
                 <div class="limit">
-                    <strong>Limitations:</strong> Does not replace a full legal compliance audit or penetration test.
+                    <strong>Limitations:</strong> Does not replace a full legal compliance audit or penetration test. This is not a certification.
                 </div>
                 <a href="mailto:Sabawoon.rasoli@gmail.com?subject=Tier 3 Inquiry" class="btn outline">Inquire</a>
             </div>
@@ -101,7 +126,7 @@
         <div class="card featured" style="text-align: center;">
             <h2>Full Package (Tiers 1 + 2 + 3)</h2>
             <div class="price">€4,500 <span>EUR</span></div>
-            <p>Comprehensive pre-check and evidence sealing for your AI system.</p>
+            <p>Comprehensive pre-check and written interpretation for your AI system.</p>
             <p style="color: #8b949e; text-decoration: line-through;">Regular modular value: €5,600</p>
             <div class="discount">Save €1,100 with the full package</div>
             <a href="mailto:Sabawoon.rasoli@gmail.com?subject=Full Package Inquiry" class="btn" style="max-width: 300px; margin: 20px auto 0 auto;">Contact for Full Package</a>
