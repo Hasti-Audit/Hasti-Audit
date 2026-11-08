@@ -36,7 +36,7 @@ Scanning a specific file or directory directly bypasses this skip list.
 - **NC-B3 (leakage):** Fires only when `train_test_split` appears in the **same function** as the scaler/preprocessor fit on a full-data variable. Leakage across function boundaries, or in files without a local split, is not detected. (Fixed 2026-11-07: previous versions incorrectly scanned at file scope, producing false positives.)
 - **NC-SECRET (hardcoded secrets):** Flags name-based and pattern-based secrets. Enum-like assignments (`apiKey = "apiKey"`) and CORS headers (`Access-Control-Allow-Credentials`) are excluded. May also fire on placeholder or example secrets; files under `docs_src/`, `docs/`, and `examples/` are skipped by default.
 
-## Measured precision (manual review, 2026-11-07)
+## Manual review sample (2026-11-07)
 
 The following table summarizes a **manual review of 36 findings** sampled from fastapi, streamlit, scikit-learn, and diffusers. Categories:
 - **TP** = true positive, operationally relevant
@@ -53,9 +53,9 @@ The following table summarizes a **manual review of 36 findings** sampled from f
 | NC-TORCH | 0 | 8 | 0 | Conversion scripts |
 | NC-PARSE | 0 | 1 | 0 | Intentional test file |
 
-**Overall:** 0 false positives in this sample. Most findings are **TP-low** — technically correct but operationally low-severity. Findings in test code, documentation, and conversion scripts are common and often intentional.
+**Method and caveat:** This sample was also used to tune the rules on 2026-11-07 (specifically: removing enum-like and CORS-header false positives in NC-SECRET, and fixing the file-scope bug in NC-B3). It therefore reflects **post-tuning behavior on seen data**, not an independent precision estimate. An independent estimate would require a fresh sample from repositories not used during tuning.
 
-This sample is not exhaustive. Precision on other codebases may differ.
+No false positives were observed in this sample. Most findings are **TP-low** — technically correct but operationally low-severity.
 
 ## About findings
 
